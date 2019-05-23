@@ -15,6 +15,8 @@ urlpatterns = [
     # User management
     path("users/", include("autocomplete.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+
+    path("autosuggest/", include("autocomplete.autosuggest.urls", namespace="autosuggest")),
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
@@ -22,10 +24,7 @@ if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
     # these url in browser to see how these error pages look like.
     urlpatterns += [
-        path(
-            "autosuggest/",
-            include("autocomplete.autosuggest.urls", namespace="autosuggest"),
-        ),
+
         path(
             "400/",
             default_views.bad_request,
