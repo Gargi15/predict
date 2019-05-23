@@ -21,6 +21,7 @@ django-environ = "*"
 django-crispy-forms = "*"
 django-debug-toolbar = "*"
 uwsgi = "*"
+collectfast = "*"
 
 [requires]
 python_version = "3.6"
