@@ -13,6 +13,10 @@ psycopg2 = "*"
 argon2 = "*"
 argon2-cffi = "*"
 drf-yasg = "*"
+gunicorn = "*"
+dj-database-url = "*"
+wh = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.6"

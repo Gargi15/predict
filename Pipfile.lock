@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0e68ba36cd3a4bd454613295398e779c8622ce5a98674063a645e05be5bfe627"
+            "sha256": "410e7649c263c3ee12b5384b52fc77c400c135e14a54651b2249c5241dbf9384"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -115,6 +115,14 @@
             ],
             "version": "==0.6.0"
         },
+        "dj-database-url": {
+            "hashes": [
+                "sha256:4aeaeb1f573c74835b0686a2b46b85990571159ffc21aa57ecd4d1e1cb334163",
+                "sha256:851785365761ebe4994a921b433062309eb882fedd318e1b0fcecc607ed02da9"
+            ],
+            "index": "pypi",
+            "version": "==0.5.0"
+        },
         "django": {
             "hashes": [
                 "sha256:6fcc3cbd55b16f9a01f37de8bcbe286e0ea22e87096557f1511051780338eaea",
@@ -152,6 +160,14 @@
             ],
             "index": "pypi",
             "version": "==1.15.0"
+        },
+        "gunicorn": {
+            "hashes": [
+                "sha256:aa8e0b40b4157b36a5df5e599f45c9c76d6af43845ba3b3b0efe2c70473c2471",
+                "sha256:fa2662097c66f920f53f70621c6c58ca4a3c4d3434205e608e121b5b3b71f4f3"
+            ],
+            "index": "pypi",
+            "version": "==19.9.0"
         },
         "idna": {
             "hashes": [
@@ -321,6 +337,21 @@
                 "sha256:d363e3607d8de0c220d31950a8f38b18d5ba7c0830facd71a1c6b1036b7ce06c"
             ],
             "version": "==1.25.2"
+        },
+        "wh": {
+            "hashes": [
+                "sha256:a78d3f794a7a77ad5df6be61cc12e034e7a10f9e27c2985157a6394e76768b44"
+            ],
+            "index": "pypi",
+            "version": "==1.2.0"
+        },
+        "whitenoise": {
+            "hashes": [
+                "sha256:118ab3e5f815d380171b100b05b76de2a07612f422368a201a9ffdeefb2251c1",
+                "sha256:42133ddd5229eeb6a0c9899496bdbe56c292394bf8666da77deeb27454c0456a"
+            ],
+            "index": "pypi",
+            "version": "==4.1.2"
         }
     },
     "develop": {}
