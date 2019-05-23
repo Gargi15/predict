@@ -20,6 +20,7 @@ whitenoise = "*"
 django-environ = "*"
 django-crispy-forms = "*"
 django-debug-toolbar = "*"
+uwsgi = "*"
 
 [requires]
 python_version = "3.6"
