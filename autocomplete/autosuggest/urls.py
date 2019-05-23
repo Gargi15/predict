@@ -9,7 +9,7 @@ app_name = "autosuggest"
 router = DefaultRouter()
 
 
-router.register('apis/v1', views.SuggestViewSet, base_name='sautosuggest')
+router.register('apis/v1', views.SuggestViewSet, base_name='autosuggest')
 
 urlpatterns = [
 
