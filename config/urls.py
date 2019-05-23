@@ -24,7 +24,7 @@ if settings.DEBUG:
     urlpatterns += [
         path(
             "autosuggest/",
-            include("autocomplete.autosuggest.urls", namespace="autosuggesst"),
+            include("autocomplete.autosuggest.urls", namespace="autosuggest"),
         ),
         path(
             "400/",
