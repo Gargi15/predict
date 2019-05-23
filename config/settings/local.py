@@ -11,6 +11,7 @@ SECRET_KEY = env(
     default="EloC4jGVfnqgNy9lcaXySiUfaRfvi2k5imUV3tv54YYIxLxnJn2L8NUs4nYxdTuS",
 )
 
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", 'autocomplete.herokuapp.com']
 
