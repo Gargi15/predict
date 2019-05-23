@@ -1,1 +1,1 @@
-web: gunicorn config_wsgy.py --log-file -
+web: gunicorn config/wsgi.py --log-file -
