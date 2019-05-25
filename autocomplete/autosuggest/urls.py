@@ -3,7 +3,7 @@ from django.conf.urls import include, url
 from . import views
 from django.conf.urls import include, url
 from rest_framework.routers import DefaultRouter
-from .util import Trie, Node, OurTrie
+from .util import Trie, Node, OurRepo
 
 app_name = "autosuggest"
 router = DefaultRouter()
@@ -17,11 +17,10 @@ urlpatterns = [
     ]
 
 
-OurTrie()
-
-OurTrie.getInstance().our_trie_root.create_trie_from_file()
+OurRepo()
+OurRepo.getInstance().our_trie_root.create_trie_from_file()
 print('Created our try')
-OurTrie.getInstance().our_map.insert()
-print('Created our part datastructure')
+# OurRepo.getInstance().our_map.insert()
+# print('Created our part datastructure')
 
 

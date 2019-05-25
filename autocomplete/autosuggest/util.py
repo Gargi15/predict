@@ -1,61 +1,58 @@
+import time
+import sys
+
+
 class Parts():
-
     def __init__(self):
-
         self.map = {}
         self.words = []
 
-    def insert_cuts(self, word):
-        word = str(word)
-        length = 2
-        word_length = int(str(word).__len__())
-       # print('length is: ' + str(length) + ' word length is: ' + str(word_length))
-        while length <= word_length:
+    def insert_cuts(self, word, freq):
+            word = str(word)
+            length = 2
+            word_length = int(str(word).__len__())
+            # print('length is: ' + str(length) + ' word length is: ' + str(word_length))
+            while length <= word_length:
+                    i = 0
+                    j = i + length
 
-            i = 0
-            j = i + length
+                    while j <= word_length:
+                        # print('i is: ' + str(i) + ' and j is: ' + str(j))
+                        prefix = str(word)[i:j]
+                        # print('prefix is: ' + str(prefix))
+                        i = i + 1
+                        j = j + 1
+                        if self.map.get(prefix) is None:
+                            pref_array = []
+                            pair = {'word' : word, 'freq' : freq}
+                            pref_array.append(pair)
+                            self.map[prefix] = pref_array
+                        else:
+                            pref_array = self.map.get(prefix)
+                            pair = {'word': word, 'freq': freq}
+                            pref_array.append(pair)
+                           # print('array is: ' + str(pref_array))
+                            self.map[prefix] = pref_array
 
-            while j <= word_length:
-               # print('i is: ' + str(i) + ' and j is: ' + str(j))
-                prefix = str(word)[i:j]
-                # print('prefix is: ' + str(prefix))
-                i = i + 1
-                j = j + 1
-                if self.map.get(prefix) is None:
-                    pref_array = []
-                    pref_array.append(word)
-                    self.map[prefix] = pref_array
-                else:
-                    pref_array = self.map.get(prefix)
-                    pref_array.append(word)
-                 #   print('array is: ' + str(pref_array))
-                    self.map[prefix] = pref_array
-
-
-
-            length = length + 1
+                    length = length + 1
 
     def insert(self):
-
         f = open("./corpus.txt", 'r')
         f1 = f.readlines()
         lines = 0
-
         for x in f1:
             xarray = x.split("\t")
             word = xarray[0]
             freq = xarray[1]
 
            # print("\n\n\n\n line no: " + str(lines) + "word is: " + str(word) + " and freq is: " + str(freq) )
-            self.insert_cuts(word)
+            self.insert_cuts(word, freq)
 
             lines = lines + 1
             if lines > 333333:
                 break
 
     def print_map(self):
-        print('INSIDE PRINT')
-
         for k in self.map:
           print('\n' + str(k) + '\t ' + str(self.map.get(k)))
 
@@ -67,44 +64,88 @@ class Parts():
         self.words = self.map.get(word)
 
 
-
 class Node():
     def __init__(self):
 
         self.children = {}
         self.is_word = False
+        self.word = None
         self.freq = 0
 
 
 class Trie():
 
     def __init__(self):
-        self.root = Node()
-        self.words = []
+                self.root = Node()
+                self.words = []
 
     def insert_word(self, word):
-        node = self.root
+                node = self.root
 
-        for a in list(word):
-            if not node.children.get(a):
-                node.children[a] = Node()
+                for a in list(word):
+                    if not node.children.get(a):
+                        node.children[a] = Node()
 
-            node = node.children[a]
+                    node = node.children[a]
 
-        node.is_word = True
-        node.freq = 1
+                node.is_word = True
+                node.word = word
+                node.freq = 1
 
     def insert_word_with_freq(self, word, freq):
+            node = self.root
+
+            for a in list(word):
+                    if not node.children.get(a):
+                        node.children[a] = Node()
+
+                    node = node.children[a]
+
+            node.is_word = True
+            node.freq = int(freq)
+            node.word = word
+
+    def search_with_typo(self, word, maxCost):
+
+        # build first row
+        currentRow = range(len(word) + 1)
+        results = []
         node = self.root
+        # recursively search each branch of the trie
+        for letter in node.children:
+            self.searchRecursive(node.children[letter], letter, word, currentRow,
+                            results, maxCost)
 
-        for a in list(word):
-            if not node.children.get(a):
-                node.children[a] = Node()
+        return results
 
-            node = node.children[a]
+    def searchRecursive(self, node, letter, word, previousRow, results, maxCost):
 
-        node.is_word = True
-        node.freq = int(freq)
+        columns = len(word) + 1
+        currentRow = [previousRow[0] + 1]
+
+        for column in range(1, columns):
+
+            insertCost = currentRow[column - 1] + 1
+            deleteCost = previousRow[column] + 1
+
+            if word[column - 1] != letter:
+                replaceCost = previousRow[column - 1] + 1
+            else:
+                replaceCost = previousRow[column - 1]
+
+            currentRow.append(min(insertCost, deleteCost, replaceCost))
+
+        # if the last entry in the row indicates the optimal cost is less than the
+        # maximum cost, and there is a word in this trie node, then add it.
+        if currentRow[-1] <= maxCost and node.word is not None:
+            results.append((node.word, currentRow[-1]))
+
+        # if any entries in the row are less than the maximum cost, then
+        # recursively search each branch of the trie
+        if min(currentRow) <= maxCost:
+            for letter in node.children:
+                self.searchRecursive(node.children[letter], letter, word, currentRow,
+                                results, maxCost)
 
     def search_word(self, word):
         status = True
@@ -138,10 +179,7 @@ class Trie():
             freq = xarray[1]
             # print("word is: " + str(word) + " and freq is: " + str(freq))
             self.insert_word_with_freq(word, freq)
-
             lines = lines + 1
-            if lines > 333333:
-                break
 
     def suggestions(self, node, word):
 
@@ -182,7 +220,9 @@ class Trie():
 
 
 def read_file():
-
+    """
+    READS CORPUS FILE AND BREAKS IT DOWN INTO WORDS AND THEIR RESPECTIVE FREQUENCIES
+    """
     f = open("/Users/gabiswas/Documents/purge/purge/delete_emails/corpus.txt", 'r')
     f1 = f.readlines()
     lines = 0
@@ -199,22 +239,21 @@ def read_file():
 
 
 # Create your views here.
-class OurTrie:
-
+class OurRepo:
     __instance = None
 
     @staticmethod
     def getInstance():
         """ Static access method. """
-        if OurTrie.__instance is None:
-            OurTrie()
-        return OurTrie.__instance
+        if OurRepo.__instance is None:
+            OurRepo()
+        return OurRepo.__instance
 
     def __init__(self):
-        if OurTrie.__instance is not None:
-            raise Exception("This class is a singleton!")
+        if OurRepo.__instance is not None:
+            raise Exception('This is a singleton class')
         else:
-            OurTrie.__instance = self
+            OurRepo.__instance = self
             self.our_trie_root = Trie()
             self.our_map = Parts()
 
