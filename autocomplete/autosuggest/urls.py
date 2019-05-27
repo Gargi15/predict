@@ -20,7 +20,6 @@ urlpatterns = [
 OurRepo()
 OurRepo.getInstance().our_trie_root.create_trie_from_file()
 print('Created our try')
-# OurRepo.getInstance().our_map.insert()
-# print('Created our part datastructure')
+
 
 
