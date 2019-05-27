@@ -1,6 +1,9 @@
-class Node:
-    def __init__(self):
+MAX_COUNT = 25
 
+
+class Node:
+    """ Node element of a trie."""
+    def __init__(self):
         self.children = {}
         self.is_word = False
         self.word = None
@@ -8,6 +11,9 @@ class Node:
 
 
 class Trie:
+    """ Represents the Trie Data Structure.
+    The root point to the root element of the trie.
+    The words variable points to the list of all the words fetched from a keyword."""
 
     def __init__(self):
                 self.root = Node()
@@ -15,49 +21,44 @@ class Trie:
 
     def insert_word(self, word):
                 node = self.root
-
                 for a in list(word):
                     if not node.children.get(a):
                         node.children[a] = Node()
 
                     node = node.children[a]
-
                 node.is_word = True
                 node.word = word
                 node.freq = 1
 
-    def insert_word_with_freq(self, word, freq):
+    def insert_word(self, word, freq):
             node = self.root
-
             for a in list(word):
                     if not node.children.get(a):
                         node.children[a] = Node()
-
                     node = node.children[a]
 
             node.is_word = True
             node.freq = int(freq)
             node.word = word
 
-    def search_with_typo(self, word, maxCost):
-
+    def search_with_typo(self, typoLength, word):
         currentRow = range(len(word) + 1)
+        # print('Current Row is: ' + str(type(currentRow)))
         results = []
         node = self.root
-        # recursively search each branch of the trie
-        for char in node.children:
-            self.searchRecursive(node.children[char], char, word, currentRow,
-                            results, maxCost)
+        for char_ in node.children:
+            print('Current row length is: ' + str(currentRow.__len__()))
+
+            self.search_recursive(node.children[char_], char_, word, currentRow,
+                            results, typoLength)
 
         return results
 
-    def searchRecursive(self, node, letter, word, previousRow, results, maximumCost):
-
+    def search_recursive(self, node, letter, word, previousRow, results, maximumCost):
         columns = len(word) + 1
         currentRow = [previousRow[0] + 1]
 
         for column in range(1, columns):
-
             insert = currentRow[column - 1] + 1
             delete = previousRow[column] + 1
 
@@ -69,17 +70,18 @@ class Trie:
             currentRow.append(min(insert, delete, replace))
 
         if currentRow[-1] <= maximumCost and node.word is not None:
+
             results.append((node.word, currentRow[-1]))
+            #print('Result is: ' + str(results))
 
         if min(currentRow) <= maximumCost:
             for letter in node.children:
-                self.searchRecursive(node.children[letter], letter, word, currentRow,
+                self.search_recursive(node.children[letter], letter, word, currentRow,
                                 results, maximumCost)
 
     def search_word(self, word):
         status = True
         node = self.root
-
         for c in list(word):
             if not node.children.get(c):
                 status = False
@@ -91,42 +93,34 @@ class Trie:
         else:
             return node.is_word and status
 
-    def create_trie(self, corpus):
-
-        for word in corpus:
-            self.insert_word(word)
-
-    def create_trie_from_file(self):
-
+    def create_trie(self):
+        """ Creates a Trie by picking words and their frequency from the corpus."""
         f = open("./corpus.txt", 'r')
         f1 = f.readlines()
         lines = 0
-
         for x in f1:
             xarray = x.split("\t")
             word = xarray[0]
             freq = xarray[1]
-            self.insert_word_with_freq(word, freq)
-            lines = lines + 1
+            self.insert_word(word, freq)
+            lines += 1
 
     def suggestions(self, node, word):
 
             if node.is_word:
                 self.words.append({ 'word': word, 'freq': node.freq})
             for c, n in node.children.items():
-                if self.words.__len__() > 25:
+                if self.words.__len__() > MAX_COUNT:
                     break
                 else:
-
                     self.suggestions(n, word+c)
 
-    def AllSuggestions(self, key):
+    def all_suggestions(self, key):
         node = self.root
         not_found = False
-        self.words = self.words.clear()
+        self.words.clear()
         self.words = []
         temp_word = ''
-
         for a in list(key):
             if not node.children.get(a):
                 not_found = True
@@ -154,7 +148,7 @@ def read_file():
         word = xarray[0]
         freq = xarray[1]
         print("word is: " + str(word) + " and freq is: " + str(freq))
-        lines = lines + 1
+        lines += 1
         if lines > 5:
             break
 
@@ -207,7 +201,7 @@ class Parts:
 
     def print_map(self):
         for k in self.map:
-          print('\n' + str(k) + '\t ' + str(self.map.get(k)))
+            print('\n' + str(k) + '\t ' + str(self.map.get(k)))
 
     def suggestion(self, word):
         if self.words is not None:
@@ -217,6 +211,9 @@ class Parts:
 
 
 class OurRepo:
+    """
+    Singleton class for storing the corpus as a Trie.
+    """
     __instance = None
 
     @staticmethod

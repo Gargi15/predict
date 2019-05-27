@@ -18,7 +18,7 @@ urlpatterns = [
 
 
 OurRepo()
-OurRepo.getInstance().our_trie_root.create_trie_from_file()
+OurRepo.getInstance().our_trie_root.create_trie()
 print('Created our try')
 
 

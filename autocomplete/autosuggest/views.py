@@ -25,8 +25,7 @@ class SuggestViewSet(ViewSet):
     def autocomplete(self, request):
         key = request.query_params.get('key', None)
         trie = OurRepo.getInstance().our_trie_root
-        comp = trie.AllSuggestions(key)
-
+        comp = trie.all_suggestions(key)
         if comp == 1:
             response = trie.words
             print(' 1: The type of response is: ' + str(type(response)))
@@ -39,7 +38,7 @@ class SuggestViewSet(ViewSet):
             response2 = None
             if response.__len__() < MAX_COUNT:
                 print('Reached here')
-                response2 = trie.search_with_typo(key, 2)
+                response2 = trie.search_with_typo(2, key)
                 response2 = list(dict(response2).keys())
 
             if response2 is not None:
@@ -56,7 +55,7 @@ class SuggestViewSet(ViewSet):
             while grand_response.__len__() < MAX_COUNT:
                 response = None
                 while response is None:
-                    response = trie.search_with_typo(key, length)
+                    response = trie.search_with_typo(length, key)
                     length += 1
 
                 response = list(dict(response).keys())
