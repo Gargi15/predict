@@ -9,8 +9,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet
 from .util import Trie, Node, OurRepo
+from boltons.setutils import IndexedSet
 
 # Create your views here.
+
+MAX_COUNT =25
 
 
 class SuggestViewSet(ViewSet):
@@ -34,98 +37,38 @@ class SuggestViewSet(ViewSet):
             print(grand_response)
             count = response.__len__()
             response2 = None
-            if response.__len__() < 25:
+            if response.__len__() < MAX_COUNT:
                 print('Reached here')
-                response2 = trie.search_with_typo(key, 1)
+                response2 = trie.search_with_typo(key, 2)
                 response2 = list(dict(response2).keys())
 
             if response2 is not None:
                 for key in response2:
-                    if count == 25:
+                    if count == MAX_COUNT:
                         break
                     grand_response.append(key)
-                    count = count+1
-
+                    count += 1
         else:
             print("2:: ")
             length = 1
             count = 0
             grand_response = []
-            while grand_response.__len__() < 25 and length < 4:
+            while grand_response.__len__() < MAX_COUNT:
                 response = None
                 while response is None:
                     response = trie.search_with_typo(key, length)
-                    length = length + 1
+                    length += 1
 
                 response = list(dict(response).keys())
                 for element in response:
-                    if count ==25:
+                    if count == MAX_COUNT:
                         break
                     grand_response.append(element)
-                    count = count +1
+                    count += 1
 
             for result in response:
                 print(result)
-
-        response_status = status.HTTP_200_OK
-
-        return Response(grand_response, status=response_status)
-
-    @action(methods=['get'], detail=False)
-    def autocomplete2(self, request):
-        key = request.query_params.get('key', None)
-
-        trie = OurRepo.getInstance().our_trie_root
-        comp = trie.AllSuggestions(key)
+        response__ = list(IndexedSet(grand_response))
+        return Response(response__, status=status.HTTP_200_OK)
 
 
-        # if comp == -1 or comp ==0:
-        #     print('Here 1')
-        #     OurRepo.getInstance().our_map.suggestion(key)
-        #     response = OurRepo.getInstance().our_map.words
-
-        grand_response = []
-        if comp == 1:
-            print('Here 2')
-            response = trie.words
-            print('The type of response is: ' + str(type(response)))
-            grand_response = set()
-            for element in response:
-
-                grand_response.add(element.get("word"))
-
-            print(grand_response)
-            count = response.__len__()
-            response2 = None
-            if response.__len__() < 25:
-                print('Reached here')
-                response2 = trie.search_with_typo(key, 1)
-                response2 = list(dict(response2).keys())
-
-            if response2 is not None:
-                for key  in response2:
-                    grand_response.add(key)
-
-                # print(response2)
-                # print('type of response2 is: ' + str(type(response2)))
-
-        else:
-            print('Here3')
-            length = 1
-            grand_response = []
-            while grand_response.__len__() < 25 and length < 5:
-                response = None
-                while response is None:
-                    response = trie.search_with_typo(key, length)
-                    length = length + 1
-
-                response = list(dict(response).keys())
-                for element in response:
-                    grand_response.append(element)
-
-            for result in response:
-                print(result)
-
-        response_status = status.HTTP_200_OK
-
-        return Response(grand_response, status=response_status)

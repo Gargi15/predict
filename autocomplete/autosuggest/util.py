@@ -51,31 +51,30 @@ class Trie:
 
         return results
 
-
-    def searchRecursive(self, node, letter, word, previousRow, results, maxCost):
+    def searchRecursive(self, node, letter, word, previousRow, results, maximumCost):
 
         columns = len(word) + 1
         currentRow = [previousRow[0] + 1]
 
         for column in range(1, columns):
 
-            insertCost = currentRow[column - 1] + 1
-            deleteCost = previousRow[column] + 1
+            insert = currentRow[column - 1] + 1
+            delete = previousRow[column] + 1
 
             if word[column - 1] != letter:
-                replaceCost = previousRow[column - 1] + 1
+                replace = previousRow[column - 1] + 1
             else:
-                replaceCost = previousRow[column - 1]
+                replace = previousRow[column - 1]
 
-            currentRow.append(min(insertCost, deleteCost, replaceCost))
+            currentRow.append(min(insert, delete, replace))
 
-        if currentRow[-1] <= maxCost and node.word is not None:
+        if currentRow[-1] <= maximumCost and node.word is not None:
             results.append((node.word, currentRow[-1]))
 
-        if min(currentRow) <= maxCost:
+        if min(currentRow) <= maximumCost:
             for letter in node.children:
                 self.searchRecursive(node.children[letter], letter, word, currentRow,
-                                results, maxCost)
+                                results, maximumCost)
 
     def search_word(self, word):
         status = True
@@ -113,8 +112,7 @@ class Trie:
     def suggestions(self, node, word):
 
             if node.is_word:
-                self.words.append({ 'word': word, 'freq' : node.freq})
-
+                self.words.append({ 'word': word, 'freq': node.freq})
             for c, n in node.children.items():
                 if self.words.__len__() > 25:
                     break
@@ -136,10 +134,8 @@ class Trie:
             temp_word += a
             node = node.children[a]
 
-        if not_found:
+        if not_found or node.is_word and not node.children:
             return 0
-        elif node.is_word and not node.children:
-            return -1
 
         self.suggestions(node, temp_word)
         return 1
