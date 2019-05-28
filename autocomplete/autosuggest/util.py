@@ -41,6 +41,20 @@ class Trie:
             node.freq = int(freq)
             node.word = word
 
+    def search_word(self, word):
+        status = True
+        node = self.root
+        for c in list(word):
+            if not node.children.get(c):
+                status = False
+                break
+            node = node.children[c]
+
+        if not node:
+            return False
+        else:
+            return node.is_word and status
+
     def search_with_typo(self, typoLength, word):
         currentRow = range(len(word) + 1)
         # print('Current Row is: ' + str(type(currentRow)))
@@ -70,7 +84,6 @@ class Trie:
             currentRow.append(min(insert, delete, replace))
 
         if currentRow[-1] <= maximumCost and node.word is not None:
-
             results.append((node.word, currentRow[-1]))
             #print('Result is: ' + str(results))
 
@@ -79,19 +92,7 @@ class Trie:
                 self.search_recursive(node.children[letter], letter, word, currentRow,
                                 results, maximumCost)
 
-    def search_word(self, word):
-        status = True
-        node = self.root
-        for c in list(word):
-            if not node.children.get(c):
-                status = False
-                break
-            node = node.children[c]
 
-        if not node:
-            return False
-        else:
-            return node.is_word and status
 
     def create_trie(self):
         """ Creates a Trie by picking words and their frequency from the corpus."""
@@ -147,10 +148,8 @@ def read_file():
         xarray = x.split("\t")
         word = xarray[0]
         freq = xarray[1]
-        print("word is: " + str(word) + " and freq is: " + str(freq))
         lines += 1
-        if lines > 5:
-            break
+
 
 class Parts:
     def __init__(self):
