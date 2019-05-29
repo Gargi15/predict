@@ -136,22 +136,10 @@ class Trie:
         return 1
 
 
-def read_file():
-    """
-    READS CORPUS FILE AND BREAKS IT DOWN INTO WORDS AND THEIR RESPECTIVE FREQUENCIES
-    """
-    f = open("/Users/gabiswas/Documents/purge/purge/delete_emails/corpus.txt", 'r')
-    f1 = f.readlines()
-    lines = 0
-
-    for x in f1:
-        xarray = x.split("\t")
-        word = xarray[0]
-        freq = xarray[1]
-        lines += 1
-
-
+# Not used now.
 class Parts:
+    """ This class is used for processing the corpus and storing all parts of the words and doing  a reverse
+    mapping of all the parts t their respective words that they belong to"""
     def __init__(self):
         self.map = {}
         self.words = []

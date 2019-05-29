@@ -35,14 +35,14 @@ class SuggestViewSet(ViewSet):
 
             print(grand_response)
             count = response.__len__()
-            response2 = None
+            response_ = None
             if response.__len__() < MAX_COUNT:
                 print('Reached here')
-                response2 = trie.search_with_typo(2, key)
-                response2 = list(dict(response2).keys())
+                response_ = trie.search_with_typo(2, key)
+                response_ = list(dict(response_).keys())
 
-            if response2 is not None:
-                for key in response2:
+            if response_ is not None:
+                for key in response_:
                     if count == MAX_COUNT:
                         break
                     grand_response.append(key)

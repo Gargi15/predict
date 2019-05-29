@@ -19,7 +19,7 @@ urlpatterns = [
 
 OurRepo()
 OurRepo.getInstance().our_trie_root.create_trie()
-print('Created our try')
+print('Created our Trie.')
 
 
 
